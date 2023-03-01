@@ -1,42 +1,43 @@
-import { useState, useEffect } from "react";
-import { Note } from "./types";
-import { getAllNotes, createNote } from './noteService';
+import {useEffect, useState} from 'react';
+import {Task} from "./types";
+import {getAllTasks, createTask} from './services/taskService';
 
 const App = () => {
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [newNote, setNewNote] = useState('');
+    const [newTask, setNewTask] = useState('');
+    const [tasks, setTasks] = useState<Task[]>([]);
 
-  useEffect(() => {
-    getAllNotes().then(data => {
-      setNotes(data)
-    })
-  }, [])
+    useEffect(() => {
+        getAllTasks().then(data => {
+            setTasks(data);
+        });
+    }, []);
 
-  const noteCreation = (event: React.SyntheticEvent) => {
-    event.preventDefault()
-    createNote({ content: newNote }).then(data => {
-      setNotes(notes.concat(data))
-    })
+    const taskCreation = (event: React.SyntheticEvent) => {
+        event.preventDefault();
+        createTask({content: newTask})
+            .then(data => {
+                setTasks(tasks.concat(data));
+            });
 
-    setNewNote('')
-  };
+        setNewTask('');
+    };
 
-  return (
-    <div>
-      <form onSubmit={noteCreation}>
-        <input
-          value={newNote}
-          onChange={(event) => setNewNote(event.target.value)}
-        />
-        <button type='submit'>add</button>
-      </form>
-      <ul>
-        {notes.map(note => <li key={note.id}>
-          {note.content}
-        </li>)}
-      </ul>
-    </div>
-  )
-}
+    return (
+        <div>
+            <form onSubmit={taskCreation}>
+                <input
+                    value={newTask}
+                    onChange={(event) => setNewTask(event.target.value)}
+                />
+                <button type="submit">add</button>
+            </form>
+            <ul>
+                {tasks.map(task =>
+                    <li key={task.id}>{task.content}</li>
+                )}
+            </ul>
+        </div>
+    );
+};
 
 export default App;
